@@ -14,15 +14,30 @@ plugins {
     id 'application'
 }
 
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+group 'de.hhu.bsinfo'
+
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+
+    mavenCentral()
+
+    maven {
+        url "https://dl.bintray.com/hhu-bsinfo/dxram"
+    }
+
+    maven {
+        url 'https://oss.jfrog.org/artifactory/oss-snapshot-local'
+    }
 }
 
 dependencies {
-    // This dependency is found on compile classpath of this component and consumers.
-    implementation 'com.google.guava:guava:27.0.1-jre'
+    // Use DXRAM
+    compileOnly 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
