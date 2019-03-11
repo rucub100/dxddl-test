@@ -37,8 +37,16 @@ repositories {
 
 dependencies {
     // Use DXRAM
-    compileOnly 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
-
+    //compileOnly 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+	compileOnly fileTree(dir: '/home/ruslan/workspace/dxram/build/libs', include: '*.jar')
+	//compileOnly fileTree(dir: '/home/ruslan/workspace/dxutils/build/libs', include: '*.jar')
+	//compileOnly fileTree(dir: '/home/ruslan/workspace/dxmem/build/libs', include: '*.jar')
+	compileOnly 'de.hhu.bsinfo:dxmem:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+    compileOnly 'de.hhu.bsinfo:dxnet:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+    compileOnly 'de.hhu.bsinfo:dxlog:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+    compileOnly 'de.hhu.bsinfo:dxmon:0.5.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+    compileOnly 'de.hhu.bsinfo:dxutils:0.8.0' + (Boolean.valueOf(System.getProperty('release')) ? '' : '-SNAPSHOT')
+    
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
