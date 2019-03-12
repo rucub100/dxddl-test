@@ -5,27 +5,22 @@ package de.hhu.bsinfo.dxddl.test;
 
 import java.util.Arrays;
 
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase1;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase1Direct;
+import de.hhu.bsinfo.dxddl.test.data.DirectVertex;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
+import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
-public class App extends AbstractApplication {
-
-    private static int COUNT = 1000000;
-    private static boolean RESERVED = false;
-    private static long[] RESERVED_CIDS = new long[COUNT];
-    private static int[] SIZES = new int[COUNT];
-    private static short NID;
+public class App extends Application {
 
     @Override
     public void main(String[] p_args) {
         BootService bootService = getService(BootService.class);
-        NID = bootService.getNodeID();
-
         System.out.printf("\n");
         System.out.printf(
                 "  Hello! I am %s running on node %s.\n",
@@ -35,75 +30,23 @@ public class App extends AbstractApplication {
         System.out.printf("\n");
 
         // Put your application code running on the DXRAM node/peer here
+        NameserviceService nameService = getService(NameserviceService.class);
         ChunkLocalService chunkLocalService = getService(ChunkLocalService.class);
         ChunkService chunkService = getService(ChunkService.class);
-        boolean testDirectMem = Boolean.parseBoolean(p_args[0]);
-        if (!RESERVED) {
-            chunkLocalService.reserveLocal().reserve(COUNT);
-            RESERVED = true;
-        }
 
-        for (int i = 0; i < COUNT; i++) {
-            RESERVED_CIDS[i] = ChunkID.getChunkID(NID, i+1);
-        }
+        // initialize direct memory access
+        DirectVertex.init(chunkLocalService, chunkService);
+
+        boolean testDirectMem = Boolean.parseBoolean(p_args[0]);
 
         System.out.printf("  Run direct memory-access test: %b\n", testDirectMem);
-        //System.out.printf("KV-Storage BEFORE LOAD:\n%s\n", chunkService.status().getStatus());
         if (testDirectMem) {
-            testDirectMemoryAccess(chunkLocalService, chunkService);
+            TestCase1Direct tc = new  TestCase1Direct("TC2", bootService, nameService, chunkService, chunkLocalService);
+            tc.start();
         } else {
-            testOldCreatePutGet(chunkLocalService, chunkService);
+            TestCase1 tc = new  TestCase1("TC1", bootService, nameService, chunkService, chunkLocalService);
+            tc.start();
         }
-        //System.out.printf("KV-Storage AFTER LOAD:\n%s\n", chunkService.status().getStatus());
-        Stopwatch.GLOBAL.stop();
-        System.out.println(Stopwatch.GLOBAL.history());
-        Stopwatch.GLOBAL.reset();
-    }
-
-    private void testDirectMemoryAccess(
-            final ChunkLocalService p_chunkLocalService,
-            final ChunkService p_chunkService) {
-        Stopwatch.GLOBAL.start();
-        DirectVertex.init(p_chunkLocalService, p_chunkService);
-        Stopwatch.GLOBAL.split("INIT");
-        DirectVertex.createReserved(RESERVED_CIDS);
-        Stopwatch.GLOBAL.split();
-        // 10 million gets
-        for (int c = 0; c < 10; c++) {
-            for (int i = 0; i < COUNT; i++) {
-                DirectVertex.getDepth(RESERVED_CIDS[i]);
-            }            
-        }
-        Stopwatch.GLOBAL.split("GET");
-    }
-
-    private void testOldCreatePutGet(
-            final ChunkLocalService p_chunkLocalService,
-            final ChunkService p_chunkService) {
-        Stopwatch.GLOBAL.start();
-        Vertex tmp = new Vertex();
-        //tmp.setNeighbors(new long[10]);
-        for (int i = 0; i < COUNT; i++) {
-            SIZES[i] = tmp.sizeofObject();
-        }
-        Stopwatch.GLOBAL.split("SIZES");
-        p_chunkLocalService.createReservedLocal().create(RESERVED_CIDS, COUNT, SIZES);
-        Stopwatch.GLOBAL.split("CREATE RESERVED LOCAL");
-        for (int i = 0; i < COUNT; i++) {
-            tmp = new Vertex();
-            tmp.setID(RESERVED_CIDS[i]);
-            p_chunkService.put().put(tmp);
-        }
-        Stopwatch.GLOBAL.split("PUT");
-        for (int c = 0; c < 10; c++) {
-            for (int i =  0; i < COUNT; i++) {
-                Vertex tmp2 = new Vertex();
-                tmp2.setID(RESERVED_CIDS[i]);
-                p_chunkLocalService.getLocal().get(tmp2);
-                tmp2.getDepth();
-            }            
-        }
-        Stopwatch.GLOBAL.split("GET");
     }
 
     @Override

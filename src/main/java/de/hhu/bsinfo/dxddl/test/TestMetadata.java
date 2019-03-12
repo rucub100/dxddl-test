@@ -16,54 +16,68 @@ package de.hhu.bsinfo.dxddl.test;
 import de.hhu.bsinfo.dxmem.data.AbstractChunk;
 import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
-import de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil;
 
 /**
- * 
- * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 05.03.2019
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
  *
  */
-public final class Vertex extends AbstractChunk {
+public class TestMetadata extends AbstractChunk {
 
-    private int m_depth;
-    private long[] m_neighbors;
+    private short m_nodeID;
+    private long m_startLID;
+    private int m_size;
 
-    public Vertex() {
-        m_depth = -1; // provide default value
-        m_neighbors = new long[0];
+    public TestMetadata() {}
+
+    public TestMetadata(final short nodeID, final long startLID, final int size) {
+        m_nodeID = nodeID;
+        m_startLID = startLID;
+        m_size = size;
     }
 
-    public int getDepth() {
-        return m_depth;
+    public short getNodeID() {
+        return m_nodeID;
     }
 
-    public void setDepth(int depth) {
-        m_depth = depth;
+    public void setNodeId(short nodeID) {
+        m_nodeID = nodeID;
     }
 
-    public long[] getNeighbors() {
-        return m_neighbors;
+    public long getStartLID() {
+        return m_startLID;
     }
 
-    public void setNeighbors(long[] p_neighbors) {
-        m_neighbors = p_neighbors;
+    public void setStartLID(long startLID) {
+        m_startLID = startLID;
+    }
+
+    public int getSize() {
+        return m_size;
+    }
+
+    public void setSize(int size) {
+        m_size = size;
     }
 
     @Override
     public void importObject(Importer p_importer) {
-        m_depth = p_importer.readInt(m_depth);
-        m_neighbors = p_importer.readLongArray(m_neighbors);
+        m_nodeID = p_importer.readShort(m_nodeID);
+        m_startLID = p_importer.readLong(m_startLID);
+        m_size = p_importer.readInt(m_size);
     }
 
     @Override
     public int sizeofObject() {
-        return Integer.BYTES + ObjectSizeUtil.sizeofLongArray(m_neighbors);
+        return Short.BYTES +    // node ID
+                Long.BYTES +    // start LID
+                Integer.BYTES;  // size
     }
 
     @Override
     public void exportObject(Exporter p_exporter) {
-        p_exporter.writeInt(m_depth);
-        p_exporter.writeLongArray(m_neighbors);
+        p_exporter.writeShort(m_nodeID);
+        p_exporter.writeLong(m_startLID);
+        p_exporter.writeInt(m_size);
     }
-    
+
 }

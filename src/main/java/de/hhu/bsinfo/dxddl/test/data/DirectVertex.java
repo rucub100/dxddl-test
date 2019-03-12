@@ -11,13 +11,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-package de.hhu.bsinfo.dxddl.test;
+package de.hhu.bsinfo.dxddl.test.data;
 
+import de.hhu.bsinfo.dxddl.test.Stopwatch;
 import de.hhu.bsinfo.dxmem.core.Address;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
-import de.hhu.bsinfo.dxram.engine.DXRAMServiceAccessor;
 
 /**
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 05.03.2019
@@ -232,13 +232,13 @@ public final class DirectVertex implements AutoCloseable {
     }
 
     public static int getDepth(final long p_cid) {
-        //Stopwatch.GLOBAL.split("PIN >");
+        Stopwatch.GLOBAL.start();
         long address = CHUNK_LOCAL_SERVICE.pinningLocal().pin(p_cid).getAddress();
-        //Stopwatch.GLOBAL.split("< PIN | READ >");
+        Stopwatch.GLOBAL.split("PIN");
         int depth = CHUNK_LOCAL_SERVICE.rawReadLocal().readInt(address, OFFSET_DEPTH);
-        //Stopwatch.GLOBAL.split("< READ | UNPIN >");
+        Stopwatch.GLOBAL.split("READ");
         CHUNK_LOCAL_SERVICE.pinningLocal().unpinCID(p_cid);
-        //Stopwatch.GLOBAL.split("< UNPIN");
+        Stopwatch.GLOBAL.split("UNPIN");
         return depth;
     }
 
