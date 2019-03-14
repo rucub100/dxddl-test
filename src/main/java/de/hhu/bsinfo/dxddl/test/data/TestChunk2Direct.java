@@ -21,9 +21,10 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 14.03.2019
  *
  */
-public final class TestChunk1Direct implements AutoCloseable{
+public final class TestChunk2Direct implements AutoCloseable{
 
     private static final int OFFSET_TEST_INT = 0;
+    private static final int OFFSET_TEST_LONG = 4;
 
     private static boolean INITIALIZED = false;
     private static ChunkLocalService CHUNK_LOCAL_SERVICE = null;
@@ -38,35 +39,40 @@ public final class TestChunk1Direct implements AutoCloseable{
     }
 
     public static int size() {
-        return Integer.BYTES; // testInt
+        return Integer.BYTES + // testInt
+                Long.BYTES;    // testLong
+    }
+
+    public static void pin(final long[] p_cids) {
+        for (int i = 0; i < p_cids.length; i++) {
+            CHUNK_LOCAL_SERVICE.pinningLocal().pin(p_cids[i]);
+        }
     }
 
     public static long[] create(final int p_count) {
         final long[] cids = new long[p_count];
         CHUNK_LOCAL_SERVICE.createLocal().create(cids, p_count, size());
-        for (int i = 0; i < p_count; i++) {
-            CHUNK_LOCAL_SERVICE.pinningLocal().pin(cids[i]);
-        }
+        pin(cids);
         return cids;
     }
 
     public static void createReserved(final long[] p_reserved_cids, final int p_count) {
         final int[] sizes = new int[p_count];
         for (int i = 0; i < p_count; i++) {
-            CHUNK_LOCAL_SERVICE.pinningLocal().pin(p_reserved_cids[i]);
             sizes[i] = size();
         }
 
         CHUNK_LOCAL_SERVICE.createReservedLocal().create(p_reserved_cids, p_count, sizes);
+        pin(p_reserved_cids);
     }
 
-    public static TestChunk1Direct use(final long p_cid) {
+    public static TestChunk2Direct use(final long p_cid) {
         if (!INITIALIZED) {
             throw new RuntimeException("Not initialized!");
         }
 
         long address = CHUNK_LOCAL_SERVICE.pinningLocal().pin(p_cid).getAddress();
-        return new TestChunk1Direct(p_cid, address);
+        return new TestChunk2Direct(p_cid, address);
     }
 
     public static int getTestInt(final long p_cid) {
@@ -79,12 +85,22 @@ public final class TestChunk1Direct implements AutoCloseable{
         CHUNK_LOCAL_SERVICE.rawWriteLocal().writeInt(address, OFFSET_TEST_INT, p_value);
     }
 
+    public static int getTestLong(final long p_cid) {
+        final long address = CHUNK_LOCAL_SERVICE.pinningLocal().translate(p_cid);
+        return CHUNK_LOCAL_SERVICE.rawReadLocal().readInt(address, OFFSET_TEST_LONG);
+    }
+
+    public static void setTestLong(final long p_cid, int p_value) {
+        final long address = CHUNK_LOCAL_SERVICE.pinningLocal().translate(p_cid);
+        CHUNK_LOCAL_SERVICE.rawWriteLocal().writeInt(address, OFFSET_TEST_LONG, p_value);
+    }
+
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
     private final long m_cid;
     private final long m_address;
 
-    private TestChunk1Direct(final long p_cid, final long p_address) {
+    private TestChunk2Direct(final long p_cid, final long p_address) {
         m_cid = p_cid;
         m_address = p_address;
     }
@@ -97,9 +113,17 @@ public final class TestChunk1Direct implements AutoCloseable{
         CHUNK_LOCAL_SERVICE.rawWriteLocal().writeInt(m_address, OFFSET_TEST_INT, p_value);
     }
 
+    public int getTestLong() {
+        return CHUNK_LOCAL_SERVICE.rawReadLocal().readInt(m_address, OFFSET_TEST_LONG);
+    }
+
+    public void setTestLong(int p_value) {
+        CHUNK_LOCAL_SERVICE.rawWriteLocal().writeInt(m_address, OFFSET_TEST_LONG, p_value);
+    }
+
     @Override
     public void close() throws Exception {
-     // unpin via CID instead of address is faster
+        // unpin via CID instead of address is faster
         CHUNK_LOCAL_SERVICE.pinningLocal().unpinCID(m_cid);
     }
 }

@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 import de.hhu.bsinfo.dxddl.test.AbstractTest;
 import de.hhu.bsinfo.dxddl.test.Stopwatch;
 import de.hhu.bsinfo.dxddl.test.TestMetadata;
-import de.hhu.bsinfo.dxddl.test.data.DirectVertex;
+import de.hhu.bsinfo.dxddl.test.data.TestChunk1Direct;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
@@ -57,7 +57,7 @@ public final class TestCase1Direct extends AbstractTest {
 
         for (int i = 0; i < meta.getSize(); i++) {
             reserved_cids[i] = ChunkID.getChunkID(meta.getNodeID(), meta.getStartLID() + i);
-            sizes[i] = DirectVertex.size();
+            sizes[i] = TestChunk1Direct.size();
         }
 
         m_chunkLocalService.createReservedLocal().create(reserved_cids, meta.getSize(), sizes);
@@ -66,19 +66,29 @@ public final class TestCase1Direct extends AbstractTest {
     @Override
     public void run() {
         LOGGER.info("Run testcase...");
-        long chunkID = ChunkID.getChunkID(m_meta.getNodeID(), m_meta.getStartLID() + m_random.nextInt(m_meta.getSize()));
-        Stopwatch.GLOBAL.reset();
+        final int size = 10000000;
+        final long cids[] = new long[size];
+        for (int i = 0; i < size; i++) {
+            cids[i] = ChunkID.getChunkID(m_meta.getNodeID(), m_meta.getStartLID() + m_random.nextInt(m_meta.getSize()));
+            //cids[i] = addr[m_random.nextInt(m_meta.getSize())];
+        }
+
+        int test = 0;
         m_stopwatch.start();
-        DirectVertex.getDepth(chunkID);
+        for (int j = 0; j < size; j++) {
+            int tmp = TestChunk1Direct.getTestInt(cids[j]);
+            //int tmp = TestChunk1Direct.getTestIntAddr(cids[j]);
+            if (tmp > test)
+                test = tmp;
+        }
         m_stopwatch.stop();
-        Stopwatch.GLOBAL.stop();
+        System.out.println(test);
     }
 
     @Override
     public void report() {
         LOGGER.info("Report results...");
         System.out.println(m_stopwatch.history());
-        System.out.println(Stopwatch.GLOBAL.history());
     }
 
 }

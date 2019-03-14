@@ -7,7 +7,15 @@ import java.util.Arrays;
 
 import de.hhu.bsinfo.dxddl.test.cases.TestCase1;
 import de.hhu.bsinfo.dxddl.test.cases.TestCase1Direct;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase2;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase2Direct;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase3;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase3Direct;
 import de.hhu.bsinfo.dxddl.test.data.DirectVertex;
+import de.hhu.bsinfo.dxddl.test.data.TestChunk1Direct;
+import de.hhu.bsinfo.dxddl.test.data.TestChunk2Direct;
+import de.hhu.bsinfo.dxddl.test.data.TestChunk3;
+import de.hhu.bsinfo.dxddl.test.data.TestChunk3Direct;
 import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
@@ -36,14 +44,21 @@ public class App extends Application {
 
         // initialize direct memory access
         DirectVertex.init(chunkLocalService, chunkService);
+        TestChunk1Direct.init(chunkLocalService, chunkService);
+        TestChunk2Direct.init(chunkLocalService, chunkService);
+        TestChunk3Direct.init(chunkLocalService, chunkService);
 
         boolean testDirectMem = Boolean.parseBoolean(p_args[0]);
 
         System.out.printf("  Run direct memory-access test: %b\n", testDirectMem);
         if (testDirectMem) {
-            TestCase1Direct tc = new  TestCase1Direct("TC2", bootService, nameService, chunkService, chunkLocalService);
+            //TestCase3Direct tc = new  TestCase3Direct("TC3D", bootService, nameService, chunkService, chunkLocalService);
+            //TestCase2Direct tc = new  TestCase2Direct("TC2D", bootService, nameService, chunkService, chunkLocalService);
+            TestCase1Direct tc = new  TestCase1Direct("TC1D", bootService, nameService, chunkService, chunkLocalService);
             tc.start();
         } else {
+            //TestCase3 tc = new  TestCase3("TC3", bootService, nameService, chunkService, chunkLocalService);
+            //TestCase2 tc = new  TestCase2("TC2", bootService, nameService, chunkService, chunkLocalService);
             TestCase1 tc = new  TestCase1("TC1", bootService, nameService, chunkService, chunkLocalService);
             tc.start();
         }
