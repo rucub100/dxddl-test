@@ -53,7 +53,6 @@ public final class TestCase1 extends AbstractTest {
         meta.setStartLID(ChunkID.getLocalID(first));
 
         Vertex vertex = new Vertex();
-        vertex.setNeighbors(new long[100]);
         long reserved_cids[] = new long[meta.getSize()];
         int sizes[] = new int[meta.getSize()];
 

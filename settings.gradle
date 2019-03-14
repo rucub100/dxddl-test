@@ -8,3 +8,23 @@
  */
 
 rootProject.name = 'dxddl-test'
+
+// Development mode switch
+boolean isDevelop = true
+
+// Do not include other builds if this build is included
+if (isDevelop && gradle.parent != null) {
+    return
+}
+
+if (isDevelop && new File('../dxram').exists()) {
+    includeBuild('../dxram')
+}
+
+if (isDevelop && new File('../dxmem').exists()) {
+    includeBuild('../dxmem')
+}
+
+if (isDevelop && new File('../dxutils').exists()) {
+    includeBuild('../dxutils')
+}

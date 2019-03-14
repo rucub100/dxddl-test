@@ -9,9 +9,6 @@
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
-    // Apply the application plugin to add support for building an application
-    id 'application'
 }
 
 sourceCompatibility = '1.8'
@@ -51,5 +48,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-// Define the main class for the application
-mainClassName = 'de.hhu.bsinfo.dxddl.test.App'
+task wrapper(type: Wrapper) {
+    gradleVersion = "4.10"
+}

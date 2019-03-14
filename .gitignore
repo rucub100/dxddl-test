@@ -10,3 +10,5 @@ build
 .settings
 bin
 
+# Ingore IntelliJ files
+.idea/
