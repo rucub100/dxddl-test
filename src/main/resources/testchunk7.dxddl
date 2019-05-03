@@ -1,0 +1,10 @@
+/**
+ * This is a test chunk for micro benchmarking of the typed direct-memory access via DXDDL.
+ * Test case 7: Bucket 1.
+ * Designated size: 100KB
+ */
+
+chunk TestChunk7 {
+  string name;
+  long[] numbers;
+}

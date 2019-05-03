@@ -1,0 +1,15 @@
+/**
+ * This is a test chunk for micro benchmarking of the typed direct-memory access via DXDDL.
+ * Test case 4: Arrays and single members of primitive data types.
+ * Designated size: 100B
+ */
+
+chunk TestChunk4 {
+  byte[] b;
+  char c;
+  double[] d;
+  float f;
+  int[] i;
+  long l;
+  short[] s;
+}

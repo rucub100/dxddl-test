@@ -1,0 +1,17 @@
+/**
+ * This is a test chunk for micro benchmarking of the typed direct-memory access via DXDDL.
+ * Test case 5: Complex (mixed) 1.
+ * Designated size: 1KB
+ */
+
+struct TestStruct5 {
+  int num;
+  byte[] data;
+}
+
+chunk TestChunk5 {
+  long[] numbers;
+  double weight;
+  string name;
+  TestStruct5 testStruct;
+}

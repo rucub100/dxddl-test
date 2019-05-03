@@ -1,0 +1,9 @@
+/**
+ * This is a test chunk for micro benchmarking of the typed direct-memory access via DXDDL.
+ * Test case 1: Single primitive data type (int).
+ * Designated size: 4B
+ */
+
+chunk TestChunk1 {
+  int num;
+}
