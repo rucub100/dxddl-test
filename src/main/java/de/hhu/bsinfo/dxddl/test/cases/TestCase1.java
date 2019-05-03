@@ -17,15 +17,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.hhu.bsinfo.dxddl.test.AbstractTest;
-import de.hhu.bsinfo.dxddl.test.Test;
-import de.hhu.bsinfo.dxddl.test.TestMetadata;
-import de.hhu.bsinfo.dxddl.test.data.TestChunk1;
-import de.hhu.bsinfo.dxddl.test.data.Vertex;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.boot.BootService;
-import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
-import de.hhu.bsinfo.dxram.chunk.ChunkService;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxddl.test.RegularOps;
+import de.hhu.bsinfo.dxddl.test.TestCaseReport;
+import de.hhu.bsinfo.dxddl.test.api.DirectTestChunk1;
+import de.hhu.bsinfo.dxddl.test.api.TestChunk1;
 
 /**
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
@@ -35,64 +30,33 @@ public final class TestCase1 extends AbstractTest {
 
     private static final Logger LOGGER = LogManager.getFormatterLogger(TestCase1.class);
 
-    public TestCase1(
-            String name,
-            BootService bootService,
-            NameserviceService nameService,
-            ChunkService chunkService,
-            ChunkLocalService chunkLocalService) {
-        super(name, bootService, nameService, chunkService, chunkLocalService);
-    }
-
     @Override
-    public void load(TestMetadata meta) {
-        LOGGER.info("Load test data...");
-        meta.setNodeId(m_bootService.getNodeID());
-        meta.setSize(1000000);
-
-        long first = m_chunkLocalService.reserveLocal().reserve(meta.getSize())[0];
-        meta.setStartLID(ChunkID.getLocalID(first));
-
+    protected void runViaRegularAccess(RegularOps regularOps, int numOfChunks, long startCID) {
         TestChunk1 testChunk1 = new TestChunk1();
-        long reserved_cids[] = new long[meta.getSize()];
-        int sizes[] = new int[meta.getSize()];
-
-        for (int i = 0; i < meta.getSize(); i++) {
-            reserved_cids[i] = ChunkID.getChunkID(meta.getNodeID(), meta.getStartLID() + i);
-            sizes[i] = testChunk1.sizeofObject();
+        int min = Integer.MAX_VALUE;
+        for (long i = 0; i < numOfChunks; i++) {
+            testChunk1.setID(startCID + i);
+            regularOps.getGetLocal().get(testChunk1);
+            if (testChunk1.getNum() < min) {
+                min = testChunk1.getNum();
+            }
         }
-
-        m_chunkLocalService.createReservedLocal().create(reserved_cids, meta.getSize(), sizes);
     }
 
     @Override
-    public void run() {
-        LOGGER.info("Run testcase...");
-        final int size = 10000000;
-        final long cids[] = new long[size];
-        for (int i = 0; i < size; i++) {
-            cids[i] = ChunkID.getChunkID(m_meta.getNodeID(), m_meta.getStartLID() + m_random.nextInt(m_meta.getSize()));
+    protected void runViaDirectAccess(int numOfChunks, long startID) {
+        int min = Integer.MAX_VALUE;
+        int num;
+        for (long i = 0; i < numOfChunks; i++) {
+            num = DirectTestChunk1.getNum(startID + i);
+            if (num < min) {
+                min = num;
+            }
         }
-
-        int test = 0;
-        m_stopwatch.start();
-        for (int i = 0; i < size; i++) {
-            TestChunk1 testChunk = new TestChunk1();
-            testChunk.setID(cids[i]);
-            m_chunkLocalService.getLocal().get(testChunk);
-            //m_chunkService.get().get(testChunk);
-            int tmp = testChunk.getTestInt();
-            if (tmp > test)
-                test = tmp;
-        }
-        m_stopwatch.stop();
-        System.out.println(test);
     }
 
     @Override
-    public void report() {
-        LOGGER.info("Report results...");
-        System.out.println(m_stopwatch.history());
+    public String getName() {
+        return "Test case 1";
     }
-
 }

@@ -13,71 +13,57 @@
 
 package de.hhu.bsinfo.dxddl.test;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hhu.bsinfo.dxmem.data.AbstractChunk;
 import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 
 /**
- * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
  *
  */
-public class TestMetadata extends AbstractChunk {
+public class TestMetadata {
 
     private short m_nodeID;
-    private long m_startLID;
-    private int m_size;
+    private int m_numOfRuns;
+    private final Map<Test, TestCaseMD> m_testCasesMD = new HashMap<>();
 
-    public TestMetadata() {}
-
-    public TestMetadata(final short nodeID, final long startLID, final int size) {
-        m_nodeID = nodeID;
-        m_startLID = startLID;
-        m_size = size;
+    public TestMetadata(short nodeId, int numOfRuns) {
+        this.m_nodeID = nodeId;
+        this.m_numOfRuns = numOfRuns;
     }
 
-    public short getNodeID() {
-        return m_nodeID;
+    public void addTCMetadata(Test test, int numOfChunks, long startCID, long directStatCID) {
+        TestCaseMD md = new TestCaseMD();
+        md.m_numOfChunks = numOfChunks;
+        md.m_startCID = startCID;
+        md.m_directStartCID = directStatCID;
+
+        m_testCasesMD.put(test, md);
     }
 
-    public void setNodeId(short nodeID) {
-        m_nodeID = nodeID;
+    public short getNodeID() { return m_nodeID; }
+
+    public int getNumberOfRuns() { return m_numOfRuns; }
+
+    public Collection<Test> getTestCases() {
+        return m_testCasesMD.keySet();
     }
 
-    public long getStartLID() {
-        return m_startLID;
+    public int getNumberOfChunks(Test tc) {
+        return m_testCasesMD.get(tc).m_numOfChunks;
     }
 
-    public void setStartLID(long startLID) {
-        m_startLID = startLID;
+    public long getStartID(Test tc, boolean direct) {
+        return direct ? m_testCasesMD.get(tc).m_directStartCID : m_testCasesMD.get(tc).m_startCID;
     }
 
-    public int getSize() {
-        return m_size;
+    private class TestCaseMD {
+        private int m_numOfChunks;
+        private long m_startCID;
+        private long m_directStartCID;
     }
-
-    public void setSize(int size) {
-        m_size = size;
-    }
-
-    @Override
-    public void importObject(Importer p_importer) {
-        m_nodeID = p_importer.readShort(m_nodeID);
-        m_startLID = p_importer.readLong(m_startLID);
-        m_size = p_importer.readInt(m_size);
-    }
-
-    @Override
-    public int sizeofObject() {
-        return Short.BYTES +    // node ID
-                Long.BYTES +    // start LID
-                Integer.BYTES;  // size
-    }
-
-    @Override
-    public void exportObject(Exporter p_exporter) {
-        p_exporter.writeShort(m_nodeID);
-        p_exporter.writeLong(m_startLID);
-        p_exporter.writeInt(m_size);
-    }
-
 }

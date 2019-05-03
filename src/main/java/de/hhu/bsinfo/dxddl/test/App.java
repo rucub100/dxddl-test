@@ -5,26 +5,15 @@ package de.hhu.bsinfo.dxddl.test;
 
 import java.util.Arrays;
 
-import de.hhu.bsinfo.dxddl.test.cases.TestCase1;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase1Direct;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase2;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase2Direct;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase3;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase3Direct;
-import de.hhu.bsinfo.dxddl.test.data.DirectVertex;
-import de.hhu.bsinfo.dxddl.test.data.TestChunk1Direct;
-import de.hhu.bsinfo.dxddl.test.data.TestChunk2Direct;
-import de.hhu.bsinfo.dxddl.test.data.TestChunk3;
-import de.hhu.bsinfo.dxddl.test.data.TestChunk3Direct;
-import de.hhu.bsinfo.dxram.app.Application;
+import de.hhu.bsinfo.dxddl.test.api.DirectAccessApplication;
+import de.hhu.bsinfo.dxddl.test.suites.TestSuite1;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
-import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxutils.NodeID;
 
-public class App extends Application {
+public class App extends DirectAccessApplication {
 
     @Override
     public void main(String[] p_args) {
@@ -37,31 +26,11 @@ public class App extends Application {
         System.out.printf("  My arguments are: %s\n", Arrays.toString(p_args));
         System.out.printf("\n");
 
-        // Put your application code running on the DXRAM node/peer here
-        NameserviceService nameService = getService(NameserviceService.class);
-        ChunkLocalService chunkLocalService = getService(ChunkLocalService.class);
-        ChunkService chunkService = getService(ChunkService.class);
-
-        // initialize direct memory access
-        DirectVertex.init(chunkLocalService, chunkService);
-        TestChunk1Direct.init(chunkLocalService, chunkService);
-        TestChunk2Direct.init(chunkLocalService, chunkService);
-        TestChunk3Direct.init(chunkLocalService, chunkService);
-
-        boolean testDirectMem = Boolean.parseBoolean(p_args[0]);
-
-        System.out.printf("  Run direct memory-access test: %b\n", testDirectMem);
-        if (testDirectMem) {
-            //TestCase3Direct tc = new  TestCase3Direct("TC3D", bootService, nameService, chunkService, chunkLocalService);
-            //TestCase2Direct tc = new  TestCase2Direct("TC2D", bootService, nameService, chunkService, chunkLocalService);
-            TestCase1Direct tc = new  TestCase1Direct("TC1D", bootService, nameService, chunkService, chunkLocalService);
-            tc.start();
-        } else {
-            //TestCase3 tc = new  TestCase3("TC3", bootService, nameService, chunkService, chunkLocalService);
-            //TestCase2 tc = new  TestCase2("TC2", bootService, nameService, chunkService, chunkLocalService);
-            TestCase1 tc = new  TestCase1("TC1", bootService, nameService, chunkService, chunkLocalService);
-            tc.start();
-        }
+        System.out.println("  Run direct memory-access micro-benchmarking test");
+        TestSuite1 testSuite1 = new TestSuite1(getService(ChunkService.class), getService(ChunkLocalService.class));
+        testSuite1.start(bootService.getNodeID(), 1000);
+        TestSuiteReport report = testSuite1.createReport();
+        System.out.println(report);
     }
 
     @Override

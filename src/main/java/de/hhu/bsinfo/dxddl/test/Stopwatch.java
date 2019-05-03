@@ -25,8 +25,6 @@ import java.util.LinkedList;
  */
 public final class Stopwatch {
 
-    public static final Stopwatch GLOBAL = new Stopwatch();
-
     private long m_start = 0;
     private long m_stop = 0;
     private final LinkedList<StopwatchEntry> m_splits = new LinkedList<StopwatchEntry>();
@@ -51,6 +49,23 @@ public final class Stopwatch {
 
     public void reset() {
         m_splits.clear();
+    }
+
+    public static String format(long duration) {
+        String unit = "ns";
+        if (duration > 10000000) {
+            unit = "ms";
+            duration /= 1000000;
+        } else if (duration > 10000) {
+            unit = "µs";
+            duration /= 1000;
+        }
+
+        return duration + " " + unit;
+    }
+
+    public long getTotalDuration() {
+        return (m_stop - m_start);
     }
 
     public String history() {

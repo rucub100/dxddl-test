@@ -18,7 +18,8 @@ package de.hhu.bsinfo.dxddl.test;
  *
  */
 public interface Test {
-    void load(TestMetadata meta);
-    void run();
-    void report();
+    String getName();
+    void prepare(TestMetadata testMetadata);
+    void run(RegularOps regularOps);
+    TestCaseReport report();
 }

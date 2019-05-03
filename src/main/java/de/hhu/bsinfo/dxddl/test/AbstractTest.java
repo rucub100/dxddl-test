@@ -32,58 +32,52 @@ public abstract class AbstractTest implements Test {
 
     private static final Logger LOGGER = LogManager.getFormatterLogger(AbstractTest.class);
 
-    protected final String m_name;
-    protected final NameserviceService m_nameService;
-    protected final BootService m_bootService;
-    protected final ChunkService m_chunkService;
-    protected final ChunkLocalService m_chunkLocalService;
+    private int cntRuns;
+    private int cntChunks;
+    private long startCID;
+    private long directStartID;
+    private TestCaseReport testCaseReport;
 
-    protected final TestMetadata m_meta;
-    protected final Stopwatch m_stopwatch;
-    protected final Random m_random;
-
-    public AbstractTest(
-            final String name,
-            final BootService bootService,
-            final NameserviceService nameService,
-            final ChunkService chunkService,
-            final ChunkLocalService chunkLocalService) {
-        m_name = name;
-        m_bootService = bootService;
-        m_nameService = nameService;
-        m_chunkService = chunkService;
-        m_chunkLocalService = chunkLocalService;
-        m_meta = new TestMetadata();
-        m_stopwatch = new Stopwatch();
-        m_random = new Random();
+    @Override
+    public void prepare(TestMetadata testMetadata) {
+        cntChunks = testMetadata.getNumberOfChunks(this);
+        cntRuns = testMetadata.getNumberOfRuns();
+        startCID = testMetadata.getStartID(this, false);
+        directStartID = testMetadata.getStartID(this, true);
+        testCaseReport = new TestCaseReport(this);
     }
 
-    public void start() {
-        long chunkID = m_nameService.getChunkID(m_name, 500);
-        if (chunkID == ChunkID.INVALID_ID) {
-            // load test data
-            LOGGER.info("No metadata (first run)...");
-            load(m_meta);
-
-            if (m_chunkLocalService.createLocal().create(m_meta) != 1) {
-                throw new RuntimeException("Failed to create a chunk for test-metadata!");
-            }
-
-            if (!m_chunkService.put().put(m_meta)) {
-                throw new RuntimeException(String.format("Failed to put test-metadata into chunk 0x%x", m_meta.getID()));
-            }
-
-            // register metadata
-            m_nameService.register(m_meta, m_name);
-        } else {
-            LOGGER.info("Found metadata at 0x%x", chunkID);
-            m_meta.setID(chunkID);
-            if(!m_chunkLocalService.getLocal().get(m_meta)) {
-                throw new RuntimeException(String.format("Failed to get test-metadata from chunk 0x%x", chunkID));
-            }
+    @Override
+    public void run(RegularOps regularOps) {
+        LOGGER.info("Run test case \"%s\" [regular access method]...", getName());
+        Stopwatch stopwatch = new Stopwatch();
+        // perform regular access tests
+        for (int i = 0; i < cntRuns; i++) {
+            stopwatch.start();
+            runViaRegularAccess(regularOps, cntChunks, startCID);
+            stopwatch.stop();
+            testCaseReport.addRegularAccessDuration(stopwatch.getTotalDuration());
+            stopwatch.reset();
         }
 
-        run();
-        report();
+        LOGGER.info("Run test case \"%s\" [direct access method]...", getName());
+        // perform direct access tests
+        for (int i = 0; i < cntRuns; i++) {
+            stopwatch.start();
+            runViaDirectAccess(cntChunks, directStartID);
+            stopwatch.stop();
+            testCaseReport.addDirectAccessDuration(stopwatch.getTotalDuration());
+            stopwatch.reset();
+        }
+    }
+
+    protected abstract void runViaRegularAccess(
+            RegularOps regularOps, int numOfChunks, long startCID);
+
+    protected abstract void runViaDirectAccess(int numOfChunks, long startID);
+
+    @Override
+    public TestCaseReport report() {
+        return testCaseReport;
     }
 }
