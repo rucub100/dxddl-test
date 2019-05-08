@@ -40,8 +40,6 @@ public class TestChunk1 extends AbstractChunk {
         this.num = num;
     }
 
-
-
     @Override
     public void importObject(final Importer p_importer) {
         this.num = p_importer.readInt(this.num);

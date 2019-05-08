@@ -1,7 +1,7 @@
 package de.hhu.bsinfo.dxddl.test;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class TestSuiteReport {
         return testSuiteReport;
     }
 
-    private Map<Test, TCSummary> report = new HashMap<>();
+    private Map<Test, TCSummary> report = new LinkedHashMap<>();
 
     private TestSuiteReport() { }
 

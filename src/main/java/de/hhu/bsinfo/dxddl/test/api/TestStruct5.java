@@ -25,13 +25,11 @@ import static de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil.*;
 
 public class TestStruct5 implements Importable, Exportable {
 
-
-
     private int num;
     private byte[] data;
 
     public TestStruct5() {
-        this.data = new byte[0];
+        this.data = new byte[8000];
     }
 
     public int getNum() {
@@ -46,28 +44,23 @@ public class TestStruct5 implements Importable, Exportable {
         return this.data;
     }
 
-
-    
     @Override
     public void importObject(final Importer p_importer) {
         this.num = p_importer.readInt(this.num);
-        for (int i0 = 0; i0 < 0; i0++)
-            this.data[i0] = p_importer.readByte(this.data[i0]);
-        
+        this.data = p_importer.readByteArray(this.data);
     }
 
     @Override
     public void exportObject(final Exporter p_exporter) {
         p_exporter.writeInt(this.num);
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeByte(this.data[i0]);
-        
+        p_exporter.writeByteArray(this.data);
     }
 
     @Override
     public int sizeofObject() {
         int size = 0;
 
+        size += sizeofByteArray(data);
         // size of basic types
         size += 4;
         return size;

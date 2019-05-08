@@ -17,8 +17,6 @@
 package de.hhu.bsinfo.dxddl.test.api;
 
 import de.hhu.bsinfo.dxmem.data.AbstractChunk;
-import de.hhu.bsinfo.dxutils.serialization.Importable;
-import de.hhu.bsinfo.dxutils.serialization.Exportable;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxutils.serialization.Exporter;
 
@@ -26,15 +24,13 @@ import static de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil.*;
 
 public class TestChunk6 extends AbstractChunk {
 
-
-
     private String name;
     private int[] numbers;
     private TestStruct6 testStruct;
 
     public TestChunk6() {
         this.name = new String();
-        this.numbers = new int[0];
+        this.numbers = new int[25000];
         this.testStruct = new TestStruct6();
     }
 
@@ -56,30 +52,31 @@ public class TestChunk6 extends AbstractChunk {
         return this.testStruct;
     }
 
+    public void setNumbers(int[] numbers) {
+        this.numbers = numbers;
+    }
+
+    public void setNumbers(int index, int value) {
+        this.numbers[index] = value;
+    }
+
     public void setTestStruct(TestStruct6 testStruct) {
         if (testStruct == null)
             throw new NullPointerException("Parameter testStruct must not be null");
         this.testStruct = testStruct;
     }
 
-
-
     @Override
     public void importObject(final Importer p_importer) {
         this.name = p_importer.readString(this.name);
-        for (int i0 = 0; i0 < 0; i0++)
-            this.numbers[i0] = p_importer.readInt(this.numbers[i0]);
-        
+        this.numbers = p_importer.readIntArray(this.numbers);
         p_importer.importObject(this.testStruct);
-        
     }
 
     @Override
     public void exportObject(final Exporter p_exporter) {
         p_exporter.writeString(this.name);
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeInt(this.numbers[i0]);
-        
+        p_exporter.writeIntArray(this.numbers);
         p_exporter.exportObject(this.testStruct);
     }
 
@@ -90,7 +87,8 @@ public class TestChunk6 extends AbstractChunk {
         // size of complex types
         size += sizeofString(this.name);
         size += this.testStruct.sizeofObject();
-        
+        size += sizeofIntArray(numbers);
+
         return size;
     }
 }

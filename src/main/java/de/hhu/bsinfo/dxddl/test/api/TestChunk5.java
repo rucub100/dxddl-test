@@ -26,21 +26,27 @@ import static de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil.*;
 
 public class TestChunk5 extends AbstractChunk {
 
-
-
     private long[] numbers;
     private double weight;
     private String name;
     private TestStruct5 testStruct;
 
     public TestChunk5() {
-        this.numbers = new long[0];
+        this.numbers = new long[100];
         this.name = new String();
         this.testStruct = new TestStruct5();
     }
 
     public long[] getNumbers() {
         return this.numbers;
+    }
+
+    public void setNumbers(long[] numbers) {
+        this.numbers = numbers;
+    }
+
+    public void setNumbers(int index, long value) {
+        this.numbers[index] = value;
     }
 
     public double getWeight() {
@@ -71,13 +77,9 @@ public class TestChunk5 extends AbstractChunk {
         this.testStruct = testStruct;
     }
 
-
-
     @Override
     public void importObject(final Importer p_importer) {
-        for (int i0 = 0; i0 < 0; i0++)
-            this.numbers[i0] = p_importer.readLong(this.numbers[i0]);
-        
+        this.numbers = p_importer.readLongArray(this.numbers);
         this.weight = p_importer.readDouble(this.weight);
         this.name = p_importer.readString(this.name);
         p_importer.importObject(this.testStruct);
@@ -86,9 +88,7 @@ public class TestChunk5 extends AbstractChunk {
 
     @Override
     public void exportObject(final Exporter p_exporter) {
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeLong(this.numbers[i0]);
-        
+        p_exporter.writeLongArray(this.numbers);
         p_exporter.writeDouble(this.weight);
         p_exporter.writeString(this.name);
         p_exporter.exportObject(this.testStruct);
@@ -104,7 +104,7 @@ public class TestChunk5 extends AbstractChunk {
         // size of complex types
         size += sizeofString(this.name);
         size += this.testStruct.sizeofObject();
-        
+        size += sizeofLongArray(numbers);
         return size;
     }
 }

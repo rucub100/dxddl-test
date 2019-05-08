@@ -18,16 +18,16 @@ import org.apache.logging.log4j.Logger;
 
 import de.hhu.bsinfo.dxddl.test.AbstractTest;
 import de.hhu.bsinfo.dxddl.test.RegularOps;
-import de.hhu.bsinfo.dxddl.test.api.DirectTestChunk1;
-import de.hhu.bsinfo.dxddl.test.api.TestChunk1;
+import de.hhu.bsinfo.dxddl.test.api.DirectTestChunk2;
+import de.hhu.bsinfo.dxddl.test.api.TestChunk2;
 
 /**
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
  *
  */
-public final class TestCase1 extends AbstractTest {
+public final class TestCase2 extends AbstractTest {
 
-    private static final Logger LOGGER = LogManager.getFormatterLogger(TestCase1.class);
+    private static final Logger LOGGER = LogManager.getFormatterLogger(TestCase2.class);
 
     @Override
     protected void runViaRegularAccess(
@@ -35,13 +35,13 @@ public final class TestCase1 extends AbstractTest {
             final int numOfChunks,
             final int numOfOps,
             final long startCID) {
-        TestChunk1 testChunk1 = new TestChunk1();
+        TestChunk2 testChunk = new TestChunk2();
         int min = Integer.MAX_VALUE;
         for (long i = 0; i < numOfOps; i++) {
-            testChunk1.setID(startCID + (i % numOfChunks));
-            regularOps.getGetLocal().get(testChunk1);
-            if (testChunk1.getNum() < min) {
-                min = testChunk1.getNum();
+            testChunk.setID(startCID + (i % numOfChunks));
+            regularOps.getGetLocal().get(testChunk);
+            if (testChunk.getI() < min) {
+                min = testChunk.getI();
             }
         }
     }
@@ -51,7 +51,7 @@ public final class TestCase1 extends AbstractTest {
         int min = Integer.MAX_VALUE;
         int num;
         for (int i = 0; i < numOfOps; i++) {
-            num = DirectTestChunk1.getNum(ids[i % numOfChunks]);
+            num = DirectTestChunk2.getI(ids[i % numOfChunks]);
             if (num < min) {
                 min = num;
             }
@@ -60,6 +60,6 @@ public final class TestCase1 extends AbstractTest {
 
     @Override
     public String getName() {
-        return "Test case 1 (" + new TestChunk1().sizeofObject() + ")";
+        return "Test case 2 (" + new TestChunk2().sizeofObject() + ")";
     }
 }

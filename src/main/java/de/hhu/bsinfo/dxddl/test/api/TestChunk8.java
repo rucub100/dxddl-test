@@ -55,17 +55,13 @@ public class TestChunk8 extends AbstractChunk {
     @Override
     public void importObject(final Importer p_importer) {
         this.name = p_importer.readString(this.name);
-        for (int i0 = 0; i0 < 0; i0++)
-            this.numbers[i0] = p_importer.readInt(this.numbers[i0]);
-        
+        this.numbers = p_importer.readIntArray(this.numbers);
     }
 
     @Override
     public void exportObject(final Exporter p_exporter) {
         p_exporter.writeString(this.name);
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeInt(this.numbers[i0]);
-        
+        p_exporter.writeIntArray(this.numbers);
     }
 
     @Override
@@ -74,7 +70,8 @@ public class TestChunk8 extends AbstractChunk {
 
         // size of complex types
         size += sizeofString(this.name);
-        
+        size += sizeofIntArray(numbers);
+
         return size;
     }
 }

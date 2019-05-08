@@ -26,9 +26,6 @@ import static de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil.*;
 
 public class TestChunk3 extends AbstractChunk {
 
-
-
-    private boolean[] b;
     private byte[] b2;
     private char[] c;
     private double[] d;
@@ -38,18 +35,13 @@ public class TestChunk3 extends AbstractChunk {
     private short[] s;
 
     public TestChunk3() {
-        this.b = new boolean[0];
-        this.b2 = new byte[0];
-        this.c = new char[0];
-        this.d = new double[0];
-        this.f = new float[0];
-        this.i = new int[0];
-        this.l = new long[0];
-        this.s = new short[0];
-    }
-
-    public boolean[] getB() {
-        return this.b;
+        this.b2 = new byte[10];
+        this.c = new char[10];
+        this.d = new double[10];
+        this.f = new float[10];
+        this.i = new int[10];
+        this.l = new long[10];
+        this.s = new short[10];
     }
 
     public byte[] getB2() {
@@ -80,67 +72,95 @@ public class TestChunk3 extends AbstractChunk {
         return this.s;
     }
 
+    public void setB2(byte[] b2) {
+        this.b2 = b2;
+    }
 
+    public void setC(char[] c) {
+        this.c = c;
+    }
+
+    public void setD(double[] d) {
+        this.d = d;
+    }
+
+    public void setF(float[] f) {
+        this.f = f;
+    }
+
+    public void setI(int[] i) {
+        this.i = i;
+    }
+
+    public void setL(long[] l) {
+        this.l = l;
+    }
+
+    public void setS(short[] s) {
+        this.s = s;
+    }
+
+    public void setB2(int index, byte value) {
+        this.b2[index] = value;
+    }
+
+    public void setC(int index, char value) {
+        this.c[index] = value;
+    }
+
+    public void setD(int index, double value) {
+        this.d[index] = value;
+    }
+
+    public void setF(int index, float value) {
+        this.f[index] = value;
+    }
+
+    public void setI(int index, int value) {
+        this.i[index] = value;
+    }
+
+    public void setL(int index, long value) {
+        this.l[index] = value;
+    }
+
+    public void setS(int index, short value) {
+        this.s[index] = value;
+    }
 
     @Override
     public void importObject(final Importer p_importer) {
-        for (int i0 = 0; i0 < 0; i0++)
-            this.b[i0] = p_importer.readBoolean(this.b[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.b2[i0] = p_importer.readByte(this.b2[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.c[i0] = p_importer.readChar(this.c[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.d[i0] = p_importer.readDouble(this.d[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.f[i0] = p_importer.readFloat(this.f[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.i[i0] = p_importer.readInt(this.i[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.l[i0] = p_importer.readLong(this.l[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            this.s[i0] = p_importer.readShort(this.s[i0]);
-        
+        this.b2 = p_importer.readByteArray(this.b2);
+        this.c = p_importer.readCharArray(this.c);
+        this.d = p_importer.readDoubleArray(this.d);
+        this.f = p_importer.readFloatArray(this.f);
+        this.i = p_importer.readIntArray(this.i);
+        this.l = p_importer.readLongArray(this.l);
+        this.s = p_importer.readShortArray(this.s);
     }
 
     @Override
     public void exportObject(final Exporter p_exporter) {
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeBoolean(this.b[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeByte(this.b2[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeChar(this.c[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeDouble(this.d[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeFloat(this.f[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeInt(this.i[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeLong(this.l[i0]);
-        
-        for (int i0 = 0; i0 < 0; i0++)
-            p_exporter.writeShort(this.s[i0]);
+        p_exporter.writeByteArray(this.b2);
+        p_exporter.writeCharArray(this.c);
+        p_exporter.writeDoubleArray(this.d);
+        p_exporter.writeFloatArray(this.f);
+        p_exporter.writeIntArray(this.i);
+        p_exporter.writeLongArray(this.l);
+        p_exporter.writeShortArray(this.s);
         
     }
 
     @Override
     public int sizeofObject() {
         int size = 0;
+        size += sizeofByteArray(this.b2);
+        size += sizeofCharArray(this.c);
+        size += sizeofDoubleArray(this.d);
+        size += sizeofFloatArray(this.f);
+        size += sizeofIntArray(this.i);
+        size += sizeofLongArray(this.l);
+        size += sizeofShortArray(this.s);
         return size;
     }
 }

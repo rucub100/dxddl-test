@@ -25,8 +25,6 @@ import static de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil.*;
 
 public class TestStruct6 implements Importable, Exportable {
 
-
-
     private int num;
     private long data;
     private String ident;
@@ -61,8 +59,6 @@ public class TestStruct6 implements Importable, Exportable {
         this.ident = ident;
     }
 
-
-    
     @Override
     public void importObject(final Importer p_importer) {
         this.num = p_importer.readInt(this.num);
