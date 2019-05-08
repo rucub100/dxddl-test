@@ -31,16 +31,22 @@ public class TestMetadata {
     private int m_numOfRuns;
     private final Map<Test, TestCaseMD> m_testCasesMD = new HashMap<>();
 
-    public TestMetadata(short nodeId, int numOfRuns) {
+    public TestMetadata(final short nodeId, final int numOfRuns) {
         this.m_nodeID = nodeId;
         this.m_numOfRuns = numOfRuns;
     }
 
-    public void addTCMetadata(Test test, int numOfChunks, long startCID, long directStatCID) {
+    public void addTCMetadata(
+            final Test test,
+            final int numOfChunks,
+            final int numOfOps,
+            final long startCID,
+            final long[] ids) {
         TestCaseMD md = new TestCaseMD();
         md.m_numOfChunks = numOfChunks;
+        md.m_numOfOps = numOfOps;
         md.m_startCID = startCID;
-        md.m_directStartCID = directStatCID;
+        md.m_directCIDs = ids;
 
         m_testCasesMD.put(test, md);
     }
@@ -57,13 +63,22 @@ public class TestMetadata {
         return m_testCasesMD.get(tc).m_numOfChunks;
     }
 
-    public long getStartID(Test tc, boolean direct) {
-        return direct ? m_testCasesMD.get(tc).m_directStartCID : m_testCasesMD.get(tc).m_startCID;
+    public int getNumberOfOps(Test tc) {
+        return m_testCasesMD.get(tc).m_numOfOps;
+    }
+
+    public long getStartID(Test tc) {
+        return m_testCasesMD.get(tc).m_startCID;
+    }
+
+    public long[] getDirectIDs(Test tc) {
+        return m_testCasesMD.get(tc).m_directCIDs;
     }
 
     private class TestCaseMD {
         private int m_numOfChunks;
+        private int m_numOfOps;
         private long m_startCID;
-        private long m_directStartCID;
+        private long[] m_directCIDs;
     }
 }

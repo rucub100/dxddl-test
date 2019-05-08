@@ -34,16 +34,18 @@ public abstract class AbstractTest implements Test {
 
     private int cntRuns;
     private int cntChunks;
+    private int cntOps;
     private long startCID;
-    private long directStartID;
+    private long[] directIDs;
     private TestCaseReport testCaseReport;
 
     @Override
     public void prepare(TestMetadata testMetadata) {
         cntChunks = testMetadata.getNumberOfChunks(this);
+        cntOps = testMetadata.getNumberOfOps(this);
         cntRuns = testMetadata.getNumberOfRuns();
-        startCID = testMetadata.getStartID(this, false);
-        directStartID = testMetadata.getStartID(this, true);
+        startCID = testMetadata.getStartID(this);
+        directIDs = testMetadata.getDirectIDs(this);
         testCaseReport = new TestCaseReport(this);
     }
 
@@ -54,7 +56,7 @@ public abstract class AbstractTest implements Test {
         // perform regular access tests
         for (int i = 0; i < cntRuns; i++) {
             stopwatch.start();
-            runViaRegularAccess(regularOps, cntChunks, startCID);
+            runViaRegularAccess(regularOps, cntChunks, cntOps, startCID);
             stopwatch.stop();
             testCaseReport.addRegularAccessDuration(stopwatch.getTotalDuration());
             stopwatch.reset();
@@ -64,7 +66,7 @@ public abstract class AbstractTest implements Test {
         // perform direct access tests
         for (int i = 0; i < cntRuns; i++) {
             stopwatch.start();
-            runViaDirectAccess(cntChunks, directStartID);
+            runViaDirectAccess(cntChunks, cntOps, directIDs);
             stopwatch.stop();
             testCaseReport.addDirectAccessDuration(stopwatch.getTotalDuration());
             stopwatch.reset();
@@ -72,9 +74,9 @@ public abstract class AbstractTest implements Test {
     }
 
     protected abstract void runViaRegularAccess(
-            RegularOps regularOps, int numOfChunks, long startCID);
+            RegularOps regularOps, int numOfChunks, int numOfOps, long startCID);
 
-    protected abstract void runViaDirectAccess(int numOfChunks, long startID);
+    protected abstract void runViaDirectAccess(int numOfChunks, int numOfOps, long[] ids);
 
     @Override
     public TestCaseReport report() {

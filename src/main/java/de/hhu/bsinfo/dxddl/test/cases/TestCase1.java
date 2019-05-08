@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import de.hhu.bsinfo.dxddl.test.AbstractTest;
 import de.hhu.bsinfo.dxddl.test.RegularOps;
-import de.hhu.bsinfo.dxddl.test.TestCaseReport;
 import de.hhu.bsinfo.dxddl.test.api.DirectTestChunk1;
 import de.hhu.bsinfo.dxddl.test.api.TestChunk1;
 
@@ -31,11 +30,15 @@ public final class TestCase1 extends AbstractTest {
     private static final Logger LOGGER = LogManager.getFormatterLogger(TestCase1.class);
 
     @Override
-    protected void runViaRegularAccess(RegularOps regularOps, int numOfChunks, long startCID) {
+    protected void runViaRegularAccess(
+            final RegularOps regularOps,
+            final int numOfChunks,
+            final int numOfOps,
+            final long startCID) {
         TestChunk1 testChunk1 = new TestChunk1();
         int min = Integer.MAX_VALUE;
-        for (long i = 0; i < numOfChunks; i++) {
-            testChunk1.setID(startCID + i);
+        for (long i = 0; i < numOfOps; i++) {
+            testChunk1.setID(startCID + (i % numOfChunks));
             regularOps.getGetLocal().get(testChunk1);
             if (testChunk1.getNum() < min) {
                 min = testChunk1.getNum();
@@ -44,11 +47,11 @@ public final class TestCase1 extends AbstractTest {
     }
 
     @Override
-    protected void runViaDirectAccess(int numOfChunks, long startID) {
+    protected void runViaDirectAccess(final int numOfChunks, final int numOfOps, final long[] ids) {
         int min = Integer.MAX_VALUE;
         int num;
-        for (long i = 0; i < numOfChunks; i++) {
-            num = DirectTestChunk1.getNum(startID + i);
+        for (int i = 0; i < numOfOps; i++) {
+            num = DirectTestChunk1.getNum(ids[i % numOfChunks]);
             if (num < min) {
                 min = num;
             }

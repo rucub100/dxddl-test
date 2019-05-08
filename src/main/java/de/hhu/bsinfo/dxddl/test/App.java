@@ -26,11 +26,49 @@ public class App extends DirectAccessApplication {
         System.out.printf("  My arguments are: %s\n", Arrays.toString(p_args));
         System.out.printf("\n");
 
+        if (p_args.length < 1 || p_args.length > 2) {
+            help();
+            return;
+        }
+
+        Suite suite;
+        int numOfRuns = 10;
+
+        try {
+            int id = Integer.parseInt(p_args[0]);
+            suite = getSuite(id);
+            if (suite == null) {
+                throw new Exception(String.format("Suite with ID %d not found", id));
+            }
+            if (p_args.length > 1) {
+                numOfRuns = Integer.parseInt(p_args[1]);
+                if (numOfRuns < 1) {
+                    throw new Exception("Invalid number of iterations specified");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            help();
+            return;
+        }
+
         System.out.println("  Run direct memory-access micro-benchmarking test");
-        TestSuite1 testSuite1 = new TestSuite1(getService(ChunkService.class), getService(ChunkLocalService.class));
-        testSuite1.start(bootService.getNodeID(), 1000);
-        TestSuiteReport report = testSuite1.createReport();
+        suite.start(bootService.getNodeID(), numOfRuns);
+        TestSuiteReport report = suite.createReport();
         System.out.println(report);
+    }
+
+    private void help() {
+        System.out.println("usage:\t\t <suite id> <number of iterations>");
+    }
+
+    private Suite getSuite(int id) {
+        switch (id) {
+            case 1:
+                return new TestSuite1(getService(ChunkService.class), getService(ChunkLocalService.class));
+            default:
+                return null;
+        }
     }
 
     @Override

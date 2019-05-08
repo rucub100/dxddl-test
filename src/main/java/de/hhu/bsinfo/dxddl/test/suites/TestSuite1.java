@@ -32,12 +32,14 @@ public class TestSuite1 extends AbstractSuite {
         TestMetadata testMetadata = new TestMetadata(nodeId, numOfRuns);
 
         final int numOfChunks1 = 1000000;
+        final int numOfOps1 = 1000000;
         TestCase1 testCase1 = new TestCase1();
         addTestCase(testCase1);
 
         long startCID = regularOps.getReserveLocal().reserve(numOfChunks1)[0];
-        long directStartID = DirectTestChunk1.reserve(numOfChunks1)[0];
-        testMetadata.addTCMetadata(testCase1, numOfChunks1, startCID, directStartID);
+        testMetadata.addTCMetadata(
+                testCase1, numOfChunks1, numOfOps1, startCID, DirectTestChunk1.reserve(numOfChunks1));
+
         return testMetadata;
     }
 
@@ -47,22 +49,21 @@ public class TestSuite1 extends AbstractSuite {
 
         Test testCase1 = tests.get(0);
         int n = testMetadata.getNumberOfChunks(testCase1);
-        long startCID = testMetadata.getStartID(testCase1, false);
-        long directStartID = testMetadata.getStartID(testCase1, true);
+        long startCID = testMetadata.getStartID(testCase1);
+        final long[] directIDs = testMetadata.getDirectIDs(testCase1);
 
-        long[] tmp = new long[n];
+        //long[] tmp = new long[n];
         //int[] sizes = new int[n];
         TestChunk1 testChunk1 = new TestChunk1();
         for (int i = 0; i < n; i++) {
-            tmp[i] = directStartID + i;
             testChunk1.setID(startCID + i);
             testChunk1.setNum(i);
             regularOps.getCreateReservedLocal().create(testChunk1);
             regularOps.getPut().put(testChunk1);
         }
-        DirectTestChunk1.createReserved(tmp);
+        DirectTestChunk1.createReserved(directIDs);
         for (int i = 0; i < n; i++) {
-            DirectTestChunk1.setNum(directStartID + i, i);
+            DirectTestChunk1.setNum(directIDs[i], i);
         }
     }
 }
