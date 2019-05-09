@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import de.hhu.bsinfo.dxddl.test.api.DirectAccessApplication;
 import de.hhu.bsinfo.dxddl.test.suites.TestSuite1;
+import de.hhu.bsinfo.dxddl.test.suites.TestSuite2;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
@@ -66,6 +67,8 @@ public class App extends DirectAccessApplication {
         switch (id) {
             case 1:
                 return new TestSuite1(getService(ChunkService.class), getService(ChunkLocalService.class));
+            case 2:
+                return new TestSuite2(getService(ChunkService.class), getService(ChunkLocalService.class));
             default:
                 return null;
         }
