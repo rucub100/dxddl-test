@@ -18,29 +18,29 @@ import de.hhu.bsinfo.dxddl.test.api.TestChunk3;
 import de.hhu.bsinfo.dxddl.test.api.TestChunk4;
 import de.hhu.bsinfo.dxddl.test.api.TestChunk5;
 import de.hhu.bsinfo.dxddl.test.api.TestChunk6;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase1;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase2;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase3;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase4;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase5;
-import de.hhu.bsinfo.dxddl.test.cases.TestCase6;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase10;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase11;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase12;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase7;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase8;
+import de.hhu.bsinfo.dxddl.test.cases.TestCase9;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
 /**
- * Test GET with different chunk sizes but via addresses instead of CIDs.
+ * Test put with different chunk sizes via addresses instead of CIDs.
  **/
-public class TestSuite2 extends AbstractSuite {
+public class TestSuite4 extends AbstractSuite {
 
-    private static final Logger LOGGER = LogManager.getFormatterLogger(TestSuite2.class);
+    private static final Logger LOGGER = LogManager.getFormatterLogger(TestSuite4.class);
 
-    public TestSuite2(ChunkService chunkService, ChunkLocalService chunkLocalService) {
+    public TestSuite4(ChunkService chunkService, ChunkLocalService chunkLocalService) {
         super(chunkService, chunkLocalService);
     }
 
     @Override
     public String getName() {
-        return "Test suite 2";
+        return "Test suite 4";
     }
 
     @Override
@@ -49,10 +49,10 @@ public class TestSuite2 extends AbstractSuite {
 
         TestMetadata testMetadata = new TestMetadata(nodeId, numOfRuns);
 
-        // test case 1
+        // test case 7
         final int numOfChunks1 = 1000000;
         final int numOfOps1 = 1000000;
-        TestCase1 testCase1 = new TestCase1();
+        TestCase7 testCase1 = new TestCase7();
         addTestCase(testCase1);
 
         long[] tmp = new long[numOfChunks1];
@@ -65,10 +65,10 @@ public class TestSuite2 extends AbstractSuite {
                 startCID,
                 DirectTestChunk1.create(numOfChunks1));
 
-        // test case 2
+        // test case 8
         final int numOfChunks2 = 1000000;
         final int numOfOps2 = 1000000;
-        TestCase2 testCase2 = new TestCase2();
+        TestCase8 testCase2 = new TestCase8();
         addTestCase(testCase2);
 
         tmp = new long[numOfChunks2];
@@ -81,10 +81,10 @@ public class TestSuite2 extends AbstractSuite {
                 startCID,
                 DirectTestChunk2.create(numOfChunks2));
 
-        // test case 3
+        // test case 9
         final int numOfChunks3 = 1000000;
         final int numOfOps3 = 1000000;
-        TestCase3 testCase3 = new TestCase3();
+        TestCase9 testCase3 = new TestCase9();
         addTestCase(testCase3);
 
         tmp = new long[numOfChunks3];
@@ -97,10 +97,10 @@ public class TestSuite2 extends AbstractSuite {
                 startCID,
                 DirectTestChunk3.create(numOfChunks3));
 
-        // test case 4
+        // test case 10
         final int numOfChunks4 = 100000;
         final int numOfOps4 = 100000;
-        TestCase4 testCase4 = new TestCase4();
+        TestCase10 testCase4 = new TestCase10();
         addTestCase(testCase4);
 
         tmp = new long[numOfChunks4];
@@ -113,10 +113,10 @@ public class TestSuite2 extends AbstractSuite {
                 startCID,
                 DirectTestChunk4.create(numOfChunks4));
 
-        // test case 5
+        // test case 11
         final int numOfChunks5 = 100000;
         final int numOfOps5 = 100000;
-        TestCase5 testCase5 = new TestCase5();
+        TestCase11 testCase5 = new TestCase11();
         addTestCase(testCase5);
 
         tmp = new long[numOfChunks5];
@@ -129,10 +129,10 @@ public class TestSuite2 extends AbstractSuite {
                 startCID,
                 DirectTestChunk5.create(numOfChunks5));
 
-        // test case 6
+        // test case 12
         final int numOfChunks6 = 1000;
         final int numOfOps6 = 1000;
-        TestCase6 testCase6 = new TestCase6();
+        TestCase12 testCase6 = new TestCase12();
         addTestCase(testCase6);
 
         tmp = new long[numOfChunks6];
@@ -152,92 +152,44 @@ public class TestSuite2 extends AbstractSuite {
     public void load(TestMetadata testMetadata) {
         LOGGER.info("Load test suite...");
 
-        // test case 1
-        Test testCase1 = tests.get(0);
-        int n = testMetadata.getNumberOfChunks(testCase1);
-        long startCID = testMetadata.getStartID(testCase1);
-        long[] directIDs = testMetadata.getDirectIDs(testCase1);
-
-        TestChunk1 testChunk1 = new TestChunk1();
-        for (int i = 0; i < n; i++) {
-            testChunk1.setID(startCID + i);
-            testChunk1.setNum(i);
-            regularOps.getPut().put(testChunk1);
-            DirectTestChunk1.setNum(directIDs[i], i);
-        }
-
-        // test case 2
-        Test testCase2 = tests.get(1);
-        n = testMetadata.getNumberOfChunks(testCase2);
-        startCID = testMetadata.getStartID(testCase2);
-        directIDs = testMetadata.getDirectIDs(testCase2);
-
-        TestChunk2 testChunk2 = new TestChunk2();
-        for (int i = 0; i < n; i++) {
-            testChunk2.setID(startCID + i);
-            testChunk2.setI(i);
-            regularOps.getPut().put(testChunk2);
-            DirectTestChunk2.setI(directIDs[i], i);
-        }
-
-        // test case 3
+        // test case 9
         Test testCase3 = tests.get(2);
-        n = testMetadata.getNumberOfChunks(testCase3);
-        startCID = testMetadata.getStartID(testCase3);
-        directIDs = testMetadata.getDirectIDs(testCase3);
+        int n = testMetadata.getNumberOfChunks(testCase3);
+        long[] directIDs = testMetadata.getDirectIDs(testCase3);
 
-        TestChunk3 testChunk3 = new TestChunk3();
         for (int i = 0; i < n; i++) {
-            testChunk3.setID(startCID + i);
-            testChunk3.setI(0, i);
-            regularOps.getPut().put(testChunk3);
             // chunk size does not matter (direct access)
-            DirectTestChunk3.setI(directIDs[i], new int[] { i, 1 });
+            DirectTestChunk3.setI(directIDs[i], new int[] { 42, 42 });
         }
 
-        // test case 4
+        // test case 10
         Test testCase4 = tests.get(3);
         n = testMetadata.getNumberOfChunks(testCase4);
-        startCID = testMetadata.getStartID(testCase4);
         directIDs = testMetadata.getDirectIDs(testCase4);
 
-        TestChunk4 testChunk4 = new TestChunk4();
         for (int i = 0; i < n; i++) {
-            testChunk4.setID(startCID + i);
-            testChunk4.setI(90, i);
-            regularOps.getPut().put(testChunk4);
             // chunk size does not matter (direct access)
-            DirectTestChunk4.setI(directIDs[i], new int[] { i, 1 });
+            DirectTestChunk4.setI(directIDs[i], new int[] { 42, 42 });
         }
 
-        // test case 5
+        // test case 11
         Test testCase5 = tests.get(4);
         n = testMetadata.getNumberOfChunks(testCase5);
-        startCID = testMetadata.getStartID(testCase5);
         directIDs = testMetadata.getDirectIDs(testCase5);
 
-        TestChunk5 testChunk5 = new TestChunk5();
         for (int i = 0; i < n; i++) {
-            testChunk5.setID(startCID + i);
-            testChunk5.setNumbers(90, i);
-            regularOps.getPut().put(testChunk5);
             // chunk size does not matter (direct access)
-            DirectTestChunk5.setNumbers(directIDs[i], new long[] { i, 1 });
+            DirectTestChunk5.setNumbers(directIDs[i], new long[] { 42, 42 });
         }
 
-        // test case 6
+        // test case 12
         Test testCase6 = tests.get(5);
         n = testMetadata.getNumberOfChunks(testCase6);
-        startCID = testMetadata.getStartID(testCase6);
         directIDs = testMetadata.getDirectIDs(testCase6);
 
-        TestChunk6 testChunk6 = new TestChunk6();
         for (int i = 0; i < n; i++) {
-            testChunk6.setID(startCID + i);
-            testChunk6.setNumbers(1000, i);
-            regularOps.getPut().put(testChunk6);
             // chunk size does not matter (direct access)
-            DirectTestChunk6.setNumbers(directIDs[i], new int[] { i, 1 });
+            DirectTestChunk6.setNumbers(directIDs[i], new int[] { 42, 42 });
         }
     }
 }

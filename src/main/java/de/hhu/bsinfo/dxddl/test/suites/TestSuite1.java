@@ -27,6 +27,9 @@ import de.hhu.bsinfo.dxddl.test.cases.TestCase6;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
+/**
+ * Test GET with different chunk sizes.
+ **/
 public class TestSuite1 extends AbstractSuite {
 
     private static final Logger LOGGER = LogManager.getFormatterLogger(TestSuite1.class);
@@ -140,7 +143,7 @@ public class TestSuite1 extends AbstractSuite {
                 numOfChunks6,
                 numOfOps6,
                 startCID,
-                DirectTestChunk6.getCIDs(DirectTestChunk6.create(numOfChunks5)));
+                DirectTestChunk6.getCIDs(DirectTestChunk6.create(numOfChunks6)));
 
         return testMetadata;
     }
