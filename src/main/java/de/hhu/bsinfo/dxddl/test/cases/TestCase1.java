@@ -37,25 +37,37 @@ public final class TestCase1 extends AbstractTest {
             final long startCID) {
         TestChunk1 testChunk1 = new TestChunk1();
         int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         for (long i = 0; i < numOfOps; i++) {
             testChunk1.setID(startCID + (i % numOfChunks));
             regularOps.getGetLocal().get(testChunk1);
             if (testChunk1.getNum() < min) {
                 min = testChunk1.getNum();
             }
+            if (testChunk1.getNum() > max) {
+                max = testChunk1.getNum();
+            }
         }
+        MIN = min;
+        MAX = max;
     }
 
     @Override
     protected void runViaDirectAccess(final int numOfChunks, final int numOfOps, final long[] ids) {
         int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
         int num;
         for (int i = 0; i < numOfOps; i++) {
             num = DirectTestChunk1.getNum(ids[i % numOfChunks]);
             if (num < min) {
                 min = num;
             }
+            if (num > max) {
+                max = num;
+            }
         }
+        MIN = min;
+        MAX = max;
     }
 
     @Override

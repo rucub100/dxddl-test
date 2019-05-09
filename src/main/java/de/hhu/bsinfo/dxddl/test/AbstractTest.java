@@ -39,6 +39,9 @@ public abstract class AbstractTest implements Test {
     private long[] directIDs;
     private TestCaseReport testCaseReport;
 
+    public static int MIN = Integer.MAX_VALUE;
+    public static int MAX = Integer.MIN_VALUE;
+
     @Override
     public void prepare(TestMetadata testMetadata) {
         cntChunks = testMetadata.getNumberOfChunks(this);
