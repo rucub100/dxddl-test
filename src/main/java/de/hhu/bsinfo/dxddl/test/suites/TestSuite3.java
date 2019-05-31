@@ -99,7 +99,7 @@ public class TestSuite3 extends AbstractSuite {
 
         // test case 10
         final int numOfChunks4 = 100000;
-        final int numOfOps4 = 100000;
+        final int numOfOps4 = 1000000;
         TestCase10 testCase4 = new TestCase10();
         addTestCase(testCase4);
 
@@ -115,7 +115,7 @@ public class TestSuite3 extends AbstractSuite {
 
         // test case 11
         final int numOfChunks5 = 100000;
-        final int numOfOps5 = 100000;
+        final int numOfOps5 = 1000000;
         TestCase11 testCase5 = new TestCase11();
         addTestCase(testCase5);
 
@@ -131,7 +131,7 @@ public class TestSuite3 extends AbstractSuite {
 
         // test case 12
         final int numOfChunks6 = 1000;
-        final int numOfOps6 = 1000;
+        final int numOfOps6 = 1000000;
         TestCase12 testCase6 = new TestCase12();
         addTestCase(testCase6);
 
