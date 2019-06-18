@@ -50,7 +50,7 @@ public class TestSuite3 extends AbstractSuite {
         TestMetadata testMetadata = new TestMetadata(nodeId, numOfRuns);
 
         // test case 7
-        final int numOfChunks1 = 1000000;
+        final int numOfChunks1 = 1000;
         final int numOfOps1 = 1000000;
         TestCase7 testCase1 = new TestCase7();
         addTestCase(testCase1);
@@ -66,7 +66,7 @@ public class TestSuite3 extends AbstractSuite {
                 DirectTestChunk1.getCIDs(DirectTestChunk1.create(numOfChunks1)));
 
         // test case 8
-        final int numOfChunks2 = 1000000;
+        final int numOfChunks2 = 1000;
         final int numOfOps2 = 1000000;
         TestCase8 testCase2 = new TestCase8();
         addTestCase(testCase2);
@@ -82,7 +82,7 @@ public class TestSuite3 extends AbstractSuite {
                 DirectTestChunk2.getCIDs(DirectTestChunk2.create(numOfChunks2)));
 
         // test case 9
-        final int numOfChunks3 = 1000000;
+        final int numOfChunks3 = 1000;
         final int numOfOps3 = 1000000;
         TestCase9 testCase3 = new TestCase9();
         addTestCase(testCase3);
@@ -98,7 +98,7 @@ public class TestSuite3 extends AbstractSuite {
                 DirectTestChunk3.getCIDs(DirectTestChunk3.create(numOfChunks3)));
 
         // test case 10
-        final int numOfChunks4 = 100000;
+        final int numOfChunks4 = 1000;
         final int numOfOps4 = 1000000;
         TestCase10 testCase4 = new TestCase10();
         addTestCase(testCase4);
@@ -114,7 +114,7 @@ public class TestSuite3 extends AbstractSuite {
                 DirectTestChunk4.getCIDs(DirectTestChunk4.create(numOfChunks4)));
 
         // test case 11
-        final int numOfChunks5 = 100000;
+        final int numOfChunks5 = 1000;
         final int numOfOps5 = 1000000;
         TestCase11 testCase5 = new TestCase11();
         addTestCase(testCase5);
