@@ -10,6 +10,12 @@ import de.hhu.bsinfo.dxram.chunk.operation.GetLocal;
 import de.hhu.bsinfo.dxram.chunk.operation.Put;
 import de.hhu.bsinfo.dxram.chunk.operation.ReserveLocal;
 
+/**
+ * Helper class for the regular (non direct-memory) access.
+ *
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
+ *
+ */
 public class RegularOps {
 
     private final Get m_get;

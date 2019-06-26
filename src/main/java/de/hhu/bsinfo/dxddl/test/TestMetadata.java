@@ -22,6 +22,8 @@ import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 
 /**
+ * Metadata for a test case.
+ *
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
  *
  */

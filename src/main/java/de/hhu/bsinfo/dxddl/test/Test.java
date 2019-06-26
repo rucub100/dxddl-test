@@ -14,12 +14,37 @@
 package de.hhu.bsinfo.dxddl.test;
 
 /**
+ * A test case.
+ *
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
  *
  */
 public interface Test {
+    /**
+     * Gets the name of the test case
+     *
+     * @return The name
+     */
     String getName();
+
+    /**
+     * Prepares a test case for the run
+     *
+     * @param testMetadata The required run parameters
+     */
     void prepare(TestMetadata testMetadata);
+
+    /**
+     * Runs the test case
+     *
+     * @param regularOps A helper object
+     */
     void run(RegularOps regularOps);
+
+    /**
+     * Returns a report with the results from the run
+     *
+     * @return The report
+     */
     TestCaseReport report();
 }

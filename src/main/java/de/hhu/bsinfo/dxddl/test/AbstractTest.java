@@ -25,6 +25,8 @@ import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 
 /**
+ * An abstraction of a single test case that allows to compare runs with direct memory-access against the regular runs.
+ *
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 13.03.2019
  *
  */
@@ -42,6 +44,9 @@ public abstract class AbstractTest implements Test {
     public static int MIN = Integer.MAX_VALUE;
     public static int MAX = Integer.MIN_VALUE;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void prepare(TestMetadata testMetadata) {
         cntChunks = testMetadata.getNumberOfChunks(this);
@@ -52,6 +57,9 @@ public abstract class AbstractTest implements Test {
         testCaseReport = new TestCaseReport(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(RegularOps regularOps) {
         LOGGER.info("Run test case \"%s\" [regular access method]...", getName());
@@ -81,6 +89,9 @@ public abstract class AbstractTest implements Test {
 
     protected abstract void runViaDirectAccess(int numOfChunks, int numOfOps, long[] ids);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public TestCaseReport report() {
         return testCaseReport;

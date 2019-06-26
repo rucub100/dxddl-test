@@ -9,6 +9,10 @@ import org.apache.logging.log4j.Logger;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
+/**
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
+ *
+ */
 public abstract class AbstractSuite implements Suite {
 
     private static final Logger LOGGER = LogManager.getFormatterLogger(AbstractSuite.class);

@@ -20,6 +20,8 @@ package de.hhu.bsinfo.dxddl.test;
 import java.util.LinkedList;
 
 /**
+ * Helper class which serves as a stopwatch for measurements.
+ *
  * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, Mar 9, 2019
  *
  */
@@ -29,28 +31,49 @@ public final class Stopwatch {
     private long m_stop = 0;
     private final LinkedList<StopwatchEntry> m_splits = new LinkedList<StopwatchEntry>();
 
+    /**
+     * Starts the stopwatch
+     */
     public void start() {
         m_start = System.nanoTime();
     }
 
+    /**
+     * Memorize the interval between last and current split
+     */
     public void split() {
         m_splits.add(new StopwatchEntry(System.nanoTime(), null));
     }
 
+    /**
+     * Memorize the commented interval between last and current split
+     */
     public void split(String comment) {
         m_splits.add(new StopwatchEntry(System.nanoTime(), comment));
     }
 
+    /**
+     * Stops the stopwatch
+     */
     public void stop() {
         m_stop = System.nanoTime();
         m_splits.addFirst(new StopwatchEntry(m_start, null));
         m_splits.addLast(new StopwatchEntry(m_stop, "STOP"));
     }
 
+    /**
+     * Resets the stopwatch
+     */
     public void reset() {
         m_splits.clear();
     }
 
+    /**
+     * Formats the duration by appending a suitable unit
+     *
+     * @param duration The duration to format (in nano seconds)
+     * @return The formatted duration
+     */
     public static String format(long duration) {
         String unit = "ns";
         if (duration > 10000000) {
@@ -64,10 +87,20 @@ public final class Stopwatch {
         return duration + " " + unit;
     }
 
+    /**
+     * Gets the total duration measured by the stopwatch
+     *
+     * @return The total duration
+     */
     public long getTotalDuration() {
         return (m_stop - m_start);
     }
 
+    /**
+     * Calculates a history with all splits and optional comments
+     *
+     * @return The history
+     */
     public String history() {
         long total = (m_stop - m_start);
         String unit = "ns";

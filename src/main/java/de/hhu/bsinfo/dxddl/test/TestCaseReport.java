@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+/**
+ * Report from a single test case run.
+ *
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
+ *
+ */
 public class TestCaseReport {
 
     private Test test;

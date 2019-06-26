@@ -16,6 +16,12 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxutils.NodeID;
 
+/**
+ * The main class and a DXRAM application.
+ *
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
+ *
+ */
 public class App extends DirectAccessApplication {
 
     @Override

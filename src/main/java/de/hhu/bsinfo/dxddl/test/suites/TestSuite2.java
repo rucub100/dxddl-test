@@ -29,7 +29,10 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
 /**
  * Test GET with different chunk sizes but via addresses instead of CIDs.
- **/
+ *
+ * @author Ruslan Curbanov, ruslan.curbanov@uni-duesseldorf.de, 06.05.2019
+ *
+ */
 public class TestSuite2 extends AbstractSuite {
 
     private static final Logger LOGGER = LogManager.getFormatterLogger(TestSuite2.class);
